@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: server-deployment
+spec: 
+  replicas: 3
+  selector: 
+    matchLabels: 
+      app: server
+  template: 
+    metadata: 
+      name: server-pods
+      labels: 
+        app: server
+    spec:
+      containers:
+        - name: server
+          image: dekcode/todo-api:v5
+---
+# แบบ nodePort
+# apiVersion: v1
+# kind: Service
+# metadata: 
+#   name: server-service-nodeport
+# spec:
+#   type: NodePort
+#   selector: 
+#     app: server
+#   ports: 
+#     - port: 80
+#       targetPort: 80
+#       nodePort: 30002
+--- #cluster IP
+apiVersion: v1
+kind: Service
+metadata: 
+  name: server-service
+spec:
+  type: ClusterIP
+  selector: 
+    app: server
+  ports: 
+    - port: 80
+      targetPort: 80
+
+
+# install ingress 
+  # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/aws/deploy.yaml    
+
+# edit file host at C:\Windows\System32\drivers\etc 
+  # add your host name map with 127.0.0.1  Example: 127.0.0.1 todo.com
